@@ -61,6 +61,10 @@ const insertNode = (value, node) => {
 };
 
 const deleteNode = (value, prev, curr) => {
+  if (curr === null) {
+    return;
+  }
+
   if (value === curr.data) {
     // Leaf node
     if (curr.left === null && curr.right === null) {
@@ -129,6 +133,45 @@ const findValue = (value, node) => {
   }
 };
 
+const getValues = (node, queue) => {
+  // Add children
+  if (node.left !== null) {
+    queue.unshift(node.left);
+  }
+
+  if (node.right !== null) {
+    queue.unshift(node.right);
+  }
+
+  // queue not empty, proceed to next node in queue
+  if (queue.length > 0) {
+    let next = queue.pop();
+    return [node.data, ...getValues(next, queue)];
+  }
+  // queue empty
+  return [node.data];
+};
+
+const treeMap = (node, cb, queue) => {
+  // Add children
+  if (node.left !== null) {
+    queue.unshift(node.left);
+  }
+
+  if (node.right !== null) {
+    queue.unshift(node.right);
+  }
+
+  // apply cb to current node
+  node.data = cb(node.data);
+
+  // proceed to next node in queue, if exists
+  if (queue.length > 0) {
+    let next = queue.pop();
+    treeMap(next, cb, queue);
+  }
+};
+
 export default class Tree {
   constructor(array) {
     this.root = this.buildTree(array);
@@ -149,5 +192,13 @@ export default class Tree {
 
   find(value) {
     return findValue(value, this.root);
+  }
+
+  levelOrder(callback = null) {
+    if (callback === null) {
+      return getValues(this.root, []);
+    } else {
+      treeMap(this.root, callback, []);
+    }
   }
 }
