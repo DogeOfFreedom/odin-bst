@@ -133,7 +133,7 @@ const findValue = (value, node) => {
   }
 };
 
-const getValues = (node, queue) => {
+const getValuesBFS = (node, queue) => {
   // Add children
   if (node.left !== null) {
     queue.unshift(node.left);
@@ -146,13 +146,13 @@ const getValues = (node, queue) => {
   // queue not empty, proceed to next node in queue
   if (queue.length > 0) {
     let next = queue.pop();
-    return [node.data, ...getValues(next, queue)];
+    return [node.data, ...getValuesBFS(next, queue)];
   }
   // queue empty
   return [node.data];
 };
 
-const treeMap = (node, cb, queue) => {
+const treeMapBFS = (node, cb, queue) => {
   // Add children
   if (node.left !== null) {
     queue.unshift(node.left);
@@ -168,7 +168,49 @@ const treeMap = (node, cb, queue) => {
   // proceed to next node in queue, if exists
   if (queue.length > 0) {
     let next = queue.pop();
-    treeMap(next, cb, queue);
+    treeMapBFS(next, cb, queue);
+  }
+};
+
+const getValuesDFS = (node, op1, op2, op3) => {
+  // current node is null
+  if (node === null) {
+    return [];
+  }
+
+  // leaf node
+  if (node.left === null && node.right === null) {
+    return [node.data];
+  } else {
+    const operations = {
+      L: getValuesDFS(node.left, op1, op2, op3),
+      D: [node.data],
+      R: getValuesDFS(node.right, op1, op2, op3),
+    };
+    return [...operations[op1], ...operations[op2], ...operations[op3]];
+  }
+};
+
+const treeMapDFS = (node, cb, op1, op2, op3) => {
+  // current node is null
+  if (node === null) {
+    return;
+  }
+
+  // leaf node
+  if (node.left === null && node.right === null) {
+    node.data = cb(node.data);
+    return;
+  } else {
+    const options = {
+      L: treeMapDFS(node.left, cb, op1, op2, op3),
+      D: (node.data = cb(node.data)),
+      R: treeMapDFS(node.right, cb, op1, op2, op3),
+    };
+
+    options[op1];
+    options[op2];
+    options[op3];
   }
 };
 
@@ -196,9 +238,33 @@ export default class Tree {
 
   levelOrder(callback = null) {
     if (callback === null) {
-      return getValues(this.root, []);
+      return getValuesBFS(this.root, []);
     } else {
-      treeMap(this.root, callback, []);
+      treeMapBFS(this.root, callback, []);
+    }
+  }
+
+  inOrder(callback = null) {
+    if (callback === null) {
+      return getValuesDFS(this.root, "L", "D", "R");
+    } else {
+      treeMapDFS(this.root, callback, "L", "D", "R");
+    }
+  }
+
+  preOrder(callback = null) {
+    if (callback === null) {
+      return getValuesDFS(this.root, "D", "L", "R");
+    } else {
+      treeMapDFS(this.root, callback, "D", "L", "R");
+    }
+  }
+
+  postOrder(callback = null) {
+    if (callback === null) {
+      return getValuesDFS(this.root, "L", "R", "D");
+    } else {
+      treeMapDFS(this.root, callback, "L", "R", "D");
     }
   }
 }
