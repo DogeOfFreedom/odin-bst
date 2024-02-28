@@ -319,4 +319,18 @@ export default class Tree {
     // Value does not exist in tree
     return -1;
   }
+
+  isBalanced() {
+    const left = this.height(this.root.left);
+    const right = this.height(this.root.right);
+    if (Math.abs(left - right) > 1) {
+      return false;
+    }
+    return true;
+  }
+
+  rebalance() {
+    const dataArray = this.levelOrder();
+    this.root = this.buildTree(dataArray);
+  }
 }
