@@ -60,6 +60,57 @@ const insertNode = (value, node) => {
   }
 };
 
+const deleteNode = (value, prev, curr) => {
+  if (value === curr.data) {
+    // Leaf node
+    if (curr.left === null && curr.right === null) {
+      if (prev.left === curr) {
+        prev.left = null;
+      } else {
+        prev.right = null;
+      }
+    }
+    // two children
+    else if (curr.left !== null && curr.right !== null) {
+      const succ = findSmallest(curr.right);
+      deleteNode(succ, curr, curr.right);
+      curr.data = succ;
+    }
+    // one child
+    else {
+      if (curr.left !== null) {
+        curr.data = curr.left.data;
+        curr.left = null;
+      } else {
+        curr.data = curr.right.data;
+        curr.right = null;
+      }
+    }
+  } else {
+    if (value > curr.data) {
+      deleteNode(value, curr, curr.right);
+    } else if (value < curr.data) {
+      deleteNode(value, curr, curr.left);
+    }
+  }
+};
+
+const findSmallest = (root) => {
+  if (root === null) {
+    return 0;
+  }
+
+  if (root.left === null && root.right === null) {
+    return root.data;
+  }
+
+  const mid = root.data;
+  const left = root.left !== null ? findSmallest(root.left) : Infinity;
+  const right = root.right !== null ? findSmallest(root.right) : Infinity;
+
+  return Math.min(mid, left, right);
+};
+
 export default class Tree {
   constructor(array) {
     this.root = this.buildTree(array);
@@ -74,5 +125,9 @@ export default class Tree {
 
   insert(value) {
     insertNode(value, this.root);
+  }
+
+  deleteItem(value) {
+    deleteNode(value, null, this.root);
   }
 }
