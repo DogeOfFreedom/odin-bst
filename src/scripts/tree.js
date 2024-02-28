@@ -214,6 +214,18 @@ const treeMapDFS = (node, cb, op1, op2, op3) => {
   }
 };
 
+const getHeight = (node) => {
+  if (node === null) {
+    return 0;
+  }
+
+  if (node.left === null && node.right === null) {
+    return 1;
+  } else {
+    return Math.max(1 + getHeight(node.left), 1 + getHeight(node.right));
+  }
+};
+
 export default class Tree {
   constructor(array) {
     this.root = this.buildTree(array);
@@ -266,5 +278,9 @@ export default class Tree {
     } else {
       treeMapDFS(this.root, callback, "L", "R", "D");
     }
+  }
+
+  height(node) {
+    return getHeight(node);
   }
 }
