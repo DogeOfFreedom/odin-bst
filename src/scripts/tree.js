@@ -111,6 +111,24 @@ const findSmallest = (root) => {
   return Math.min(mid, left, right);
 };
 
+const findValue = (value, node) => {
+  if (node.data === value) {
+    return node;
+  }
+
+  if (node.data > value) {
+    if (node.left === null) {
+      return null;
+    }
+    return findValue(value, node.left);
+  } else {
+    if (node.right === null) {
+      return null;
+    }
+    return findValue(value, node.right);
+  }
+};
+
 export default class Tree {
   constructor(array) {
     this.root = this.buildTree(array);
@@ -118,8 +136,6 @@ export default class Tree {
 
   buildTree(array) {
     const cleanedArray = mergeSort([...new Set(array)]);
-    console.log("start");
-    console.log(cleanedArray);
     return buildBST(cleanedArray);
   }
 
@@ -129,5 +145,9 @@ export default class Tree {
 
   deleteItem(value) {
     deleteNode(value, null, this.root);
+  }
+
+  find(value) {
+    return findValue(value, this.root);
   }
 }

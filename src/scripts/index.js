@@ -22,3 +22,4 @@ bst.deleteItem(4);
 bst.deleteItem(6345);
 bst.deleteItem(9);
 prettyPrint(bst.root);
+console.log(bst.find(7));
