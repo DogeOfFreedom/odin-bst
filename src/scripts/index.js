@@ -13,24 +13,34 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-const bst = new Tree(arr);
-// prettyPrint(bst.root);
+const n = 70;
+const input = [];
+for (let i = 0; i < n; i += 1) {
+  const data = Math.floor(Math.random() * 100);
+  input.push(data);
+}
 
-bst.insert(10);
-bst.insert(11);
-bst.insert(12);
-bst.insert(13);
-bst.insert(14);
-bst.insert(15);
-bst.insert(16);
-bst.insert(17);
-bst.insert(18);
-bst.insert(23);
-prettyPrint(bst.root);
-console.log(bst.levelOrder());
+const bst = new Tree(input);
+console.log(`Is tree balanced ${bst.isBalanced()}`);
+console.log(`Level-Order ${bst.levelOrder()}`);
+console.log(`Pre-Order ${bst.preOrder()}`);
+console.log(`Post-Order ${bst.postOrder()}`);
+console.log(`In-Order ${bst.inOrder()}`);
 
-const test = bst.find(5);
-console.log(bst.isBalanced());
-bst.rebalance();
-prettyPrint(bst.root);
+const new_n = 50;
+for (let i = 0; i < new_n; i += 1) {
+  const data = Math.floor(Math.random() * 100);
+  input.push(data);
+}
+
+if (!bst.isBalanced()) {
+  bst.rebalance();
+}
+
+if (bst.isBalanced) {
+  console.log(`Is tree balanced ${bst.isBalanced()}`);
+  console.log(`Level-Order ${bst.levelOrder()}`);
+  console.log(`Pre-Order ${bst.preOrder()}`);
+  console.log(`Post-Order ${bst.postOrder()}`);
+  console.log(`In-Order ${bst.inOrder()}`);
+}
