@@ -226,6 +226,33 @@ const getHeight = (node) => {
   }
 };
 
+const getDepth = (value, node) => {
+  // Value found
+  if (node.data === value) {
+    return [1];
+  }
+
+  // Leaf node
+  if (node.left === null && node.right === null) {
+    return [0];
+  }
+
+  // Traverse left and right branches
+  if (node.left !== null) {
+    const left = [0, ...getDepth(value, node.left)];
+    if (left.includes(1)) {
+      return left;
+    }
+  }
+  if (node.right !== null) {
+    const right = [0, ...getDepth(value, node.right)];
+    if (right.includes(1)) {
+      return right;
+    }
+  }
+  return [0];
+};
+
 export default class Tree {
   constructor(array) {
     this.root = this.buildTree(array);
@@ -282,5 +309,14 @@ export default class Tree {
 
   height(node) {
     return getHeight(node);
+  }
+
+  depth(node) {
+    const depthArray = getDepth(node.data, this.root);
+    if (depthArray[depthArray.length - 1] === 1) {
+      return depthArray.length;
+    }
+    // Value does not exist in tree
+    return -1;
   }
 }
